@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Lake Michigan Shipwrecks (Lightweight Demo)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<style>body,html{height:100%;margin:0}#map{height:100%}#sidebar{position:absolute;left:10px;top:10px;background:#fff;padding:8px;border-radius:4px;z-index:4000}</style>
+</head>
+<body>
+<div id="map"></div>
+<div id="sidebar"><strong>Lightweight demo</strong><br>Embedded images for a few wrecks.</div>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+var map = L.map('map').setView([44.0, -87.0], 7);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(map);
+
+function onEachFeature(feature, layer) {
+    var props = feature.properties || {};
+    var html = '<b>' + (props.name || 'Unnamed') + '</b><br/>';
+    if (props.year_built) html += 'Built: ' + props.year_built + '<br/>';
+    if (props.year_sunk) html += 'Sank/Crash: ' + props.year_sunk + '<br/>';
+    if (props.depth_ft) html += 'Depth: ' + props.depth_ft + ' ft<br/>';
+    if (props.note) html += '<i>' + props.note + '</i><br/>';
+    if (props.image) {
+        html += '<img src="' + props.image + '" style="max-width:320px;display:block;margin-top:6px;"><br/>';
+        if (props.image_credit) html += '<small>' + props.image_credit + '</small><br/>';
+    } else if (props.image_source) {
+        html += '<small>Image: see properties.image_source</small><br/>';
+    }
+    html += '<small>Sources:<br/>' + (props.sources ? props.sources.join('<br/>') : 'none') + '</small>';
+    layer.bindPopup(html);
+}
+
+fetch('data/shipwrecks.geojson').then(r=>r.json()).then(data=>{
+    L.geoJSON(data, {onEachFeature:onEachFeature}).addTo(map);
+});
+fetch('data/boundary.geojson').then(r=>r.json()).then(data=>{
+    L.geoJSON(data, {style:{color:'blue',weight:2,fillOpacity:0}}).addTo(map);
+});
+</script>
+</body>
+</html>

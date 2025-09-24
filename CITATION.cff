@@ -1,0 +1,12 @@
+
+cff-version: 1.2.0
+message: "If you use this dataset or map in your work, please cite it as below."
+title: "Lake Michigan Shipwreck & Aircraft Interactive Map"
+authors:
+  - name: "Contributors"
+date-released: 2025-09-24
+version: "1.0.0"
+url: "https://github.com/<username>/<repo-name>"
+license: "MIT"
+abstract: >
+  A lightweight demo of an interactive map of shipwrecks and aircraft within the Wisconsin Shipwreck Coast and surrounding Lake Michigan.
